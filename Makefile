@@ -22,42 +22,42 @@ help:
 
 # Install all dependencies
 install:
-	cd frontend && npm install
-	cd backend && npm install
+	cd frontend && yarn install
+	cd backend && yarn install
 
 # Install frontend dependencies
 install-frontend:
-	cd frontend && npm install
+	cd frontend && yarn install
 
 # Install backend dependencies
 install-backend:
-	cd backend && npm install
+	cd backend && yarn install
 
 # Build both frontend and backend
 build: build-frontend build-backend
 
 # Build frontend
 build-frontend:
-	cd frontend && npm run build
+	cd frontend && yarn run build
 
 # Build backend
 build-backend:
-	cd backend && npm run build
+	cd backend && yarn run build
 
 # Start both frontend and backend in development mode
 dev: dev-frontend dev-backend
 
 # Start frontend in development mode
 dev-frontend:
-	cd frontend && npm run dev
+	cd frontend && yarn run dev
 
 # Start backend in development mode
 dev-backend:
-	cd backend && npm run dev
+	cd backend && yarn run dev
 
 # Run linter on frontend
 lint:
-	cd frontend && npm run lint
+	cd frontend && yarn run lint
 
 # Run tests (placeholder - adjust as needed)
 test:
