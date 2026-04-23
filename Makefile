@@ -1,0 +1,69 @@
+# Project Makefile
+
+.PHONY: help install install-frontend install-backend build build-frontend build-backend \
+	dev dev-frontend dev-backend lint test clean
+
+# Show this help
+help:
+	@echo "Available commands:"
+	@echo "  make help              - Show this help"
+	@echo "  make install           - Install all dependencies"
+	@echo "  make install-frontend  - Install frontend dependencies"
+	@echo "  make install-backend   - Install backend dependencies"
+	@echo "  make build             - Build both frontend and backend"
+	@echo "  make build-frontend    - Build frontend"
+	@echo "  make build-backend     - Build backend"
+	@echo "  make dev               - Start both frontend and backend in development mode"
+	@echo "  make dev-frontend      - Start frontend in development mode"
+	@echo "  make dev-backend       - Start backend in development mode"
+	@echo "  make lint              - Run linter on frontend"
+	@echo "  make test              - Run tests (placeholder)"
+	@echo "  make clean             - Clean build artifacts"
+
+# Install all dependencies
+install:
+	cd frontend && npm install
+	cd backend && npm install
+
+# Install frontend dependencies
+install-frontend:
+	cd frontend && npm install
+
+# Install backend dependencies
+install-backend:
+	cd backend && npm install
+
+# Build both frontend and backend
+build: build-frontend build-backend
+
+# Build frontend
+build-frontend:
+	cd frontend && npm run build
+
+# Build backend
+build-backend:
+	cd backend && npm run build
+
+# Start both frontend and backend in development mode
+dev: dev-frontend dev-backend
+
+# Start frontend in development mode
+dev-frontend:
+	cd frontend && npm run dev
+
+# Start backend in development mode
+dev-backend:
+	cd backend && npm run dev
+
+# Run linter on frontend
+lint:
+	cd frontend && npm run lint
+
+# Run tests (placeholder - adjust as needed)
+test:
+	@echo "No tests configured yet"
+
+# Clean build artifacts
+clean:
+	rm -rf frontend/dist
+	rm -rf backend/dist
