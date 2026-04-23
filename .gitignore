@@ -28,3 +28,5 @@ certificates
 
 *storybook.log
 .env
+
+opencode.json
