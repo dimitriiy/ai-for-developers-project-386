@@ -1,15 +1,19 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
-import { App } from '../App';
-import { CountdownPage } from '@/pages/countdown';
+import { RootLayout } from './RootLayout';
+import { HomePage } from '@/pages/home';
+import { BookingCatalogPage, BookingSlotsPage } from '@/pages/booking';
+import { AdminPage } from '@/pages/admin';
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
-  },
-  {
-    path: '/countdown',
-    element: <CountdownPage />,
+    element: <RootLayout />,
+    children: [
+      { index: true, element: <HomePage /> },
+      { path: 'booking', element: <BookingCatalogPage /> },
+      { path: 'booking/:eventTypeId', element: <BookingSlotsPage /> },
+      { path: 'admin', element: <AdminPage /> },
+    ],
   },
   {
     path: '*',

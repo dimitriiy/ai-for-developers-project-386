@@ -6,6 +6,11 @@
       "sourceType": "github",
       "computedHash": "98020388ca6fb26ac9b060f81eb3064fefce9018e6f660e69419a00adf0801e7"
     },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "computedHash": "063a0e6448123cd359ad0044cc46b0e490cc7964d45ef4bb9fd842bd2ffbca67"
+    },
     "mantine-custom-components": {
       "source": "mantinedev/skills",
       "sourceType": "github",

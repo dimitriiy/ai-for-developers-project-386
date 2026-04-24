@@ -28,7 +28,7 @@ describe('Admin Event Types API', () => {
 
     server.use(
       http.post('http://localhost:3000/api/admin/event-types', async ({ request }) => {
-        const body = await request.json();
+        const body = (await request.json()) as Record<string, unknown>;
         return HttpResponse.json({ id: '2', ...body }, { status: 201 });
       })
     );
@@ -40,7 +40,7 @@ describe('Admin Event Types API', () => {
   it('should update event type', async () => {
     server.use(
       http.patch('http://localhost:3000/api/admin/event-types/1', async ({ request }) => {
-        const body = await request.json();
+        const body = (await request.json()) as Record<string, unknown>;
         return HttpResponse.json({ id: '1', ...body });
       })
     );
