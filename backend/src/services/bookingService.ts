@@ -48,9 +48,9 @@ export class BookingService {
     const endTime = new Date(startTime.getTime() + eventType.duration * 60 * 1000);
 
     // 4. Validate within working hours (9:00-18:00)
-    const startHour = startTime.getUTCHours();
-    const endHour = endTime.getUTCHours();
-    const endMinute = endTime.getUTCMinutes();
+    const startHour = startTime.getHours();
+    const endHour = endTime.getHours();
+    const endMinute = endTime.getMinutes();
 
     if (startHour < WORK_START_HOUR || endHour > WORK_END_HOUR || (endHour === WORK_END_HOUR && endMinute > 0)) {
       return {
