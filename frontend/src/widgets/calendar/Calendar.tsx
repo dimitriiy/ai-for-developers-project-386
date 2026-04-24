@@ -27,6 +27,7 @@ interface CalendarProps {
   onSelectDate: (date: Date) => void;
   onMonthChange: (date: Date) => void;
   currentMonth: Date;
+  slotCounts?: Record<string, number>;
 }
 
 const weekDays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
@@ -36,6 +37,7 @@ export const Calendar = ({
   onSelectDate,
   onMonthChange,
   currentMonth,
+  slotCounts,
 }: CalendarProps) => {
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(currentMonth);
@@ -52,6 +54,11 @@ export const Calendar = ({
     onMonthChange(addMonths(currentMonth, 1));
   };
 
+  const getDayBackground = (isCurrentMonth: boolean) => {
+    if (isCurrentMonth) return '#E9ECEF';
+    return 'transparent';
+  };
+
   return (
     <Paper withBorder p="lg" radius="lg">
       <Stack gap="md">
@@ -59,21 +66,21 @@ export const Calendar = ({
           <Text fw={600} size="lg">
             Календарь
           </Text>
-          <Group gap="xs">
-            <Button variant="subtle" size="compact-sm" onClick={handlePrevMonth}>
-              <IconChevronLeft size={16} />
+          <Group gap={4}>
+            <Button variant="default" size="compact-sm" radius={6} px={6} onClick={handlePrevMonth}>
+              <IconChevronLeft size={14} />
             </Button>
-            <Button variant="subtle" size="compact-sm" onClick={handleNextMonth}>
-              <IconChevronRight size={16} />
+            <Button variant="default" size="compact-sm" radius={6} px={6} onClick={handleNextMonth}>
+              <IconChevronRight size={14} />
             </Button>
           </Group>
         </Group>
 
         <Text fw={500}>
-          {format(currentMonth, 'LLLL yyyy', { locale: ru })}
+          {format(currentMonth, 'LLLL yyyy', { locale: ru })} г.
         </Text>
 
-        <Grid columns={7} gap="xs">
+        <Grid columns={7} gap={4}>
           {weekDays.map((day) => (
             <Grid.Col key={day} span={1}>
               <Text ta="center" size="sm" c="dimmed" fw={500}>
@@ -85,6 +92,9 @@ export const Calendar = ({
           {days.map((day) => {
             const isSelected = isSameDay(day, selectedDate);
             const isCurrentMonth = isSameMonth(day, currentMonth);
+            const key = format(day, 'yyyy-MM-dd');
+            const count = slotCounts?.[key];
+            const hasCount = isCurrentMonth && count !== undefined && count > 0;
 
             return (
               <Grid.Col key={day.toISOString()} span={1}>
@@ -93,16 +103,23 @@ export const Calendar = ({
                   style={{
                     aspectRatio: '1',
                     display: 'flex',
+                    flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
                     cursor: 'pointer',
-                    borderRadius: '8px',
-                    backgroundColor: isSelected ? '#F56A1C' : 'transparent',
-                    color: isSelected ? '#fff' : isCurrentMonth ? '#212529' : '#ADB5BD',
+                    borderRadius: '6px',
+                    backgroundColor: getDayBackground(isCurrentMonth),
+                    color: isCurrentMonth ? '#212529' : '#ADB5BD',
                     fontWeight: isSelected ? 600 : 400,
+                    border: isSelected ? '2px solid #333' : '1px solid transparent',
                   }}
                 >
-                  <Text size="sm">{format(day, 'd')}</Text>
+                  <Text size="sm" lh={1.3}>{format(day, 'd')}</Text>
+                  {hasCount && (
+                    <Text fz={9} c="dimmed" lh={1}>
+                      {count} св.
+                    </Text>
+                  )}
                 </Box>
               </Grid.Col>
             );

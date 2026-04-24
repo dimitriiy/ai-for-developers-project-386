@@ -1,75 +1,74 @@
-import { Container, Stack, Title, Text, Button, Group, Card } from '@mantine/core';
-import { IconCalendarPlus, IconClock, IconUsers } from '@tabler/icons-react';
+import { Container, Grid, Stack, Title, Text, Button, Badge, Paper, List } from '@mantine/core';
+import { IconArrowRight } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
-import { HostProfile } from '@/widgets/host-profile';
 
 export const HomePage = () => {
   return (
-    <Container size="lg" py="xl">
-      <Stack gap="xl" align="center" mt="xl">
-        <HostProfile />
+    <div
+      style={{
+        background: 'linear-gradient(135deg, #EBF0FF 0%, #F8F9FA 50%, #FFF5F0 100%)',
+        minHeight: 'calc(100vh - 60px)',
+      }}
+    >
+      <Container size="lg" py={80}>
+        <Grid gap={60} align="center">
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <Stack gap="lg">
+              <Badge
+                variant="outline"
+                color="dark"
+                size="lg"
+                radius="sm"
+                style={{ alignSelf: 'flex-start' }}
+              >
+                БЫСТРАЯ ЗАПИСЬ НА ЗВОНОК
+              </Badge>
 
-        <Stack gap="sm" align="center" maw={640}>
-          <Title order={1} ta="center">
-            Запишитесь на встречу
-          </Title>
-          <Text c="dimmed" ta="center" size="lg">
-            Выберите удобный тип встречи и время. Мы подтвердим запись по
-            email.
-          </Text>
-        </Stack>
+              <Title order={1} fz={48} lh={1.1}>
+                Calendar
+              </Title>
 
-        <Group>
-          <Button
-            component={Link}
-            to="/booking"
-            size="lg"
-            radius="md"
-            leftSection={<IconCalendarPlus size={20} />}
-          >
-            Выбрать встречу
-          </Button>
-          <Button
-            component={Link}
-            to="/admin"
-            size="lg"
-            radius="md"
-            variant="default"
-          >
-            Админ-панель
-          </Button>
-        </Group>
+              <Text c="dimmed" size="lg" maw={480}>
+                Забронируйте встречу за минуту: выберите тип события и удобное время.
+              </Text>
 
-        <Group grow w="100%" mt="xl" preventGrowOverflow={false}>
-          <Card withBorder padding="lg" radius="lg">
-            <Stack gap="xs">
-              <IconClock size={28} color="#F56A1C" />
-              <Text fw={600}>Гибкое время</Text>
-              <Text c="dimmed" size="sm">
-                Календарь со свободными слотами на каждый день.
-              </Text>
+              <Button
+                component={Link}
+                to="/booking"
+                size="lg"
+                radius="xl"
+                rightSection={<IconArrowRight size={18} />}
+                style={{ alignSelf: 'flex-start' }}
+              >
+                Записаться
+              </Button>
             </Stack>
-          </Card>
-          <Card withBorder padding="lg" radius="lg">
-            <Stack gap="xs">
-              <IconCalendarPlus size={28} color="#F56A1C" />
-              <Text fw={600}>Быстрая запись</Text>
-              <Text c="dimmed" size="sm">
-                Несколько кликов — и встреча подтверждена.
-              </Text>
-            </Stack>
-          </Card>
-          <Card withBorder padding="lg" radius="lg">
-            <Stack gap="xs">
-              <IconUsers size={28} color="#F56A1C" />
-              <Text fw={600}>Управление</Text>
-              <Text c="dimmed" size="sm">
-                Удобная админка для типов встреч и записей.
-              </Text>
-            </Stack>
-          </Card>
-        </Group>
-      </Stack>
-    </Container>
+          </Grid.Col>
+
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <Paper
+              withBorder
+              p="xl"
+              radius="lg"
+              shadow="sm"
+              style={{ backgroundColor: 'rgba(255,255,255,0.85)' }}
+            >
+              <Stack gap="md">
+                <Title order={3}>Возможности</Title>
+                <List spacing="md" size="md" c="dimmed">
+                  <List.Item>Выбор типа события и удобного времени для встречи.</List.Item>
+                  <List.Item>
+                    Быстрое бронирование с подтверждением и дополнительными заметками.
+                  </List.Item>
+                  <List.Item>
+                    Управление типами встреч и просмотр предстоящих записей в админке.
+                  </List.Item>
+                </List>
+              </Stack>
+            </Paper>
+          </Grid.Col>
+        </Grid>
+      </Container>
+    </div>
   );
 };

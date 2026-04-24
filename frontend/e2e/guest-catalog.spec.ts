@@ -28,7 +28,7 @@ test.describe('Гость: каталог типов встреч', () => {
 
     await page.goto('/booking');
 
-    await expect(page.getByRole('heading', { name: 'Выберите тип встречи' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Выберите тип события' })).toBeVisible();
 
     for (const et of catalog) {
       await expect(page.getByText(et.name, { exact: true })).toBeVisible();

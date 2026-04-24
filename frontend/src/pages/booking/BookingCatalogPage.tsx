@@ -7,6 +7,7 @@ import {
   Loader,
   Center,
   Alert,
+  Paper,
 } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
@@ -19,17 +20,19 @@ export const BookingCatalogPage = () => {
   const { data: eventTypes, isLoading, isError, error } = useEventTypes();
 
   return (
-    <Container size="lg" py="xl">
+    <Container size="md" py="xl">
       <Stack gap="xl">
-        <Stack gap="md">
-          <HostProfile />
-          <Stack gap={4}>
-            <Title order={2}>Выберите тип встречи</Title>
-            <Text c="dimmed">
-              Все доступные форматы встреч с длительностью.
-            </Text>
+        <Paper withBorder p="xl" radius="lg">
+          <Stack gap="md">
+            <HostProfile />
+            <Stack gap={4}>
+              <Title order={2}>Выберите тип события</Title>
+              <Text c="dimmed">
+                Нажмите на карточку, чтобы открыть календарь и выбрать удобный слот.
+              </Text>
+            </Stack>
           </Stack>
-        </Stack>
+        </Paper>
 
         {isLoading && (
           <Center py="xl">
@@ -55,7 +58,7 @@ export const BookingCatalogPage = () => {
         )}
 
         {eventTypes && eventTypes.length > 0 && (
-          <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="lg">
+          <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="lg">
             {eventTypes.map((eventType) => (
               <EventTypeCard
                 key={eventType.id}

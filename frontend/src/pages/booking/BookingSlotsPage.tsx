@@ -9,19 +9,24 @@ import {
   Alert,
   Button,
   Group,
+  Paper,
+  Badge,
+  Box,
 } from '@mantine/core';
 import { IconAlertCircle, IconArrowLeft } from '@tabler/icons-react';
 import { useState, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { format } from 'date-fns';
+import { ru } from 'date-fns/locale';
 import { notifications } from '@mantine/notifications';
 import { useEventType } from '@/entities/event-type/queries';
-import { useSlots } from '@/entities/slot/queries';
+import { useSlots, useSlotCounts } from '@/entities/slot/queries';
 import { useCreateBooking } from '@/entities/booking/queries';
 import { Calendar } from '@/widgets/calendar';
 import { SlotsList } from '@/widgets/slots-list';
 import { HostProfile } from '@/widgets/host-profile';
 import { BookingModal } from '@/features/create-booking';
+import { generateDaySlots } from '@/shared/lib';
 import type { Slot } from '@/entities/slot/model';
 import type { BookingCreate } from '@/entities/booking/model';
 
@@ -42,16 +47,30 @@ export const BookingSlotsPage = () => {
   const { data: eventType, isLoading: isEventTypeLoading } =
     useEventType(eventTypeId);
   const {
-    data: slots,
+    data: apiSlots,
     isLoading: isSlotsLoading,
     isError: isSlotsError,
   } = useSlots(eventTypeId, dateParam);
+
+  const duration = eventType?.duration ?? 30;
+
+  const { slotCounts } = useSlotCounts(eventTypeId, duration);
+
+  const slots = useMemo(() => {
+    if (isSlotsLoading) return [];
+    return generateDaySlots(dateParam, duration, apiSlots ?? []);
+  }, [dateParam, duration, apiSlots, isSlotsLoading]);
 
   const createBooking = useCreateBooking();
 
   const handleSelectSlot = (slot: Slot) => {
     setSelectedSlot(slot);
-    setModalOpened(true);
+  };
+
+  const handleContinue = () => {
+    if (selectedSlot) {
+      setModalOpened(true);
+    }
   };
 
   const handleCloseModal = () => {
@@ -77,6 +96,16 @@ export const BookingSlotsPage = () => {
         });
       },
     });
+  };
+
+  const formatSelectedDate = () => {
+    return format(selectedDate, 'EEEE, d MMMM', { locale: ru });
+  };
+
+  const formatSelectedTime = () => {
+    if (!selectedSlot) return 'Время не выбрано';
+    const start = new Date(selectedSlot.startTime);
+    return start.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
   };
 
   if (isEventTypeLoading) {
@@ -115,55 +144,88 @@ export const BookingSlotsPage = () => {
   return (
     <Container size="lg" py="xl">
       <Stack gap="xl">
-        <Stack gap="md">
-          <Group>
-            <Button
-              variant="subtle"
-              color="gray"
-              leftSection={<IconArrowLeft size={16} />}
-              onClick={() => navigate('/booking')}
-            >
-              Назад
-            </Button>
-          </Group>
-          <HostProfile />
-          <Stack gap={4}>
-            <Title order={2}>{eventType.name}</Title>
-            <Text c="dimmed">
-              {eventType.description} · {eventType.duration} мин
-            </Text>
-          </Stack>
-        </Stack>
+        <Title order={2}>{eventType.name}</Title>
 
         <Grid gap="lg">
-          <Grid.Col span={{ base: 12, md: 7 }}>
+          <Grid.Col span={{ base: 12, md: 3 }}>
+            <Paper withBorder p="lg" radius="lg">
+              <Stack gap="md">
+                <HostProfile />
+
+                <Stack gap={4}>
+                  <Group gap="xs" align="center">
+                    <Text fw={600} size="md">
+                      {eventType.name}
+                    </Text>
+                    <Badge variant="light" color="gray" radius="sm" size="sm">
+                      {eventType.duration} мин
+                    </Badge>
+                  </Group>
+                  <Text c="dimmed" size="sm">
+                    {eventType.description}
+                  </Text>
+                </Stack>
+
+                <Box
+                  p="sm"
+                  style={{
+                    backgroundColor: '#FFF5F0',
+                    borderRadius: '8px',
+                  }}
+                >
+                  <Text size="xs" c="dimmed">Выбранная дата</Text>
+                  <Text size="sm" fw={500}>{formatSelectedDate()}</Text>
+                </Box>
+
+                <Box
+                  p="sm"
+                  style={{
+                    backgroundColor: '#FFF5F0',
+                    borderRadius: '8px',
+                  }}
+                >
+                  <Text size="xs" c="dimmed">Выбранное время</Text>
+                  <Text size="sm" fw={500}>{formatSelectedTime()}</Text>
+                </Box>
+              </Stack>
+            </Paper>
+          </Grid.Col>
+
+          <Grid.Col span={{ base: 12, md: 5 }}>
             <Calendar
               selectedDate={selectedDate}
               onSelectDate={setSelectedDate}
               currentMonth={currentMonth}
               onMonthChange={setCurrentMonth}
+              slotCounts={slotCounts}
             />
           </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 5 }}>
-            {isSlotsLoading ? (
-              <Center py="xl">
-                <Loader />
-              </Center>
-            ) : isSlotsError ? (
-              <Alert
-                color="red"
-                icon={<IconAlertCircle size={16} />}
+
+          <Grid.Col span={{ base: 12, md: 4 }}>
+            <SlotsList
+              slots={slots}
+              selectedSlot={selectedSlot}
+              onSelectSlot={handleSelectSlot}
+              isLoading={isSlotsLoading}
+              isError={isSlotsError}
+            />
+
+            <Group justify="space-between" mt="md">
+              <Button
+                variant="default"
                 radius="md"
+                onClick={() => navigate('/booking')}
               >
-                Не удалось загрузить слоты
-              </Alert>
-            ) : (
-              <SlotsList
-                slots={slots ?? []}
-                selectedSlot={selectedSlot}
-                onSelectSlot={handleSelectSlot}
-              />
-            )}
+                Назад
+              </Button>
+              <Button
+                radius="md"
+                disabled={!selectedSlot}
+                onClick={handleContinue}
+              >
+                Продолжить
+              </Button>
+            </Group>
           </Grid.Col>
         </Grid>
       </Stack>

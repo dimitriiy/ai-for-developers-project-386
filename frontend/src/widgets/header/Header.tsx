@@ -12,12 +12,14 @@ export const Header = () => {
     >
       <Container size="lg" py="md">
         <Group justify="space-between">
-          <Group gap="xs">
-            <IconCalendar size={24} color="#F56A1C" />
-            <Text fw={700} size="lg">
-              Calendar
-            </Text>
-          </Group>
+          <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Group gap="xs">
+              <IconCalendar size={24} color="#F56A1C" />
+              <Text fw={700} size="lg">
+                Calendar
+              </Text>
+            </Group>
+          </Link>
 
           <Group gap="md">
             <Button component={Link} to="/booking" variant="subtle">

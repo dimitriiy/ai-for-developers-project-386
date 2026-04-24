@@ -60,7 +60,7 @@ export const installApiMocks = async (
     forceBookingConflict: initial.forceBookingConflict ?? false,
   };
 
-  await page.route('**/api/**', async (route) => {
+  await page.route('**/localhost:3000/api/**', async (route) => {
     const request = route.request();
     const url = new URL(request.url());
     const method = request.method();
