@@ -3,7 +3,7 @@
 ## Project Overview
 
 - **Root**: Plain JavaScript (ES modules)
-- **Frontend**: Vite + React + TypeScript
+- **Frontend**: Vite + React + TypeScript + Mantine UI
 
 ---
 
@@ -11,10 +11,10 @@
 
 ```bash
 cd frontend
-npm run dev       # Dev server on http://localhost:5173
-npm run build     # Production build
-npm run preview   # Preview production build
-npm run lint      # ESLint
+yarn dev       # Dev server on http://localhost:5173
+yarn build     # Production build
+yarn preview   # Preview production build
+yarn lint      # ESLint
 ```
 
 ---
@@ -69,7 +69,7 @@ export const Component = () =>{};
 
 ## Technology Stack
 
-- Vite 8, React 19, TypeScript 5.9
+- Vite 8, React 19, TypeScript 5.9, Mantine UI
 - ESLint 9, ES2023 target
 
 ---
