@@ -47,7 +47,8 @@ build-backend:
 	cd backend && yarn run build
 
 # Start both frontend and backend in development mode
-dev: dev-frontend dev-backend
+dev:
+	$(MAKE) dev-backend & $(MAKE) dev-frontend & wait
 
 # Start frontend in development mode
 dev-frontend:
