@@ -1,7 +1,9 @@
-import { useQuery, useQueries } from '@tanstack/react-query';
+import { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { format, addDays, startOfDay } from 'date-fns';
 import { getSlots } from '@/shared/api/slots';
 import { countFreeSlots } from '@/shared/lib';
+import type { Slot } from '@/shared/api/types';
 
 export const useSlots = (eventTypeId: string, date?: string) => useQuery({
   queryKey: ['slots', eventTypeId, date],
@@ -12,7 +14,8 @@ export const useSlots = (eventTypeId: string, date?: string) => useQuery({
 const BOOKING_WINDOW_DAYS = 14;
 
 /**
- * Fetch slots for 14 days starting from today and compute free slot counts per day.
+ * Fetch all slots for the 14-day booking window in a single request
+ * and compute free slot counts per day.
  * Returns Record<string, number> keyed by 'yyyy-MM-dd'.
  */
 export const useSlotCounts = (eventTypeId: string, durationMinutes: number) => {
@@ -21,26 +24,31 @@ export const useSlotCounts = (eventTypeId: string, durationMinutes: number) => {
     format(addDays(today, i), 'yyyy-MM-dd'),
   );
 
-  const queries = useQueries({
-    queries: dates.map((date) => ({
-      queryKey: ['slots', eventTypeId, date],
-      queryFn: () => getSlots(eventTypeId, date),
-      enabled: !!eventTypeId && durationMinutes > 0,
-      staleTime: 5 * 60 * 1000,
-    })),
+  const { data: allSlots = [], isLoading } = useQuery({
+    queryKey: ['slots', eventTypeId, 'all'],
+    queryFn: () => getSlots(eventTypeId),
+    enabled: !!eventTypeId && durationMinutes > 0,
+    staleTime: 5 * 60 * 1000,
   });
 
-  const slotCounts: Record<string, number> = {};
-  let isLoading = false;
+  const slotCounts = useMemo(() => {
+    const result: Record<string, number> = {};
+    const slotsByDate = new Map<string, Slot[]>();
 
-  dates.forEach((date, i) => {
-    const query = queries[i];
-    if (query.isLoading) {
-      isLoading = true;
+    for (const slot of allSlots) {
+      const dateKey = format(new Date(slot.startTime), 'yyyy-MM-dd');
+      const existing = slotsByDate.get(dateKey) ?? [];
+      existing.push(slot);
+      slotsByDate.set(dateKey, existing);
     }
-    const apiSlots = query.data ?? [];
-    slotCounts[date] = countFreeSlots(date, durationMinutes, apiSlots);
-  });
+
+    dates.forEach((date) => {
+      const daySlots = slotsByDate.get(date) ?? [];
+      result[date] = countFreeSlots(date, durationMinutes, daySlots);
+    });
+
+    return result;
+  }, [allSlots, durationMinutes, dates]);
 
   return { slotCounts, isLoading };
 };
