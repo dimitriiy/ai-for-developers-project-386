@@ -13,9 +13,11 @@
 ### Task 1: Redesign Home Page
 
 **Files:**
+
 - Modify: `frontend/src/pages/home/HomePage.tsx` (full rewrite)
 
 The design shows a two-column hero layout:
+
 - Left side: badge "БЫСТРАЯ ЗАПИСЬ НА ЗВОНОК", large title "Calendar", subtitle text, single orange "Записаться ->" CTA button
 - Right side: "Возможности" card with bullet list
 - No HostProfile, no icon cards, no "Админ-панель" button on the hero
@@ -26,16 +28,27 @@ The design shows a two-column hero layout:
 Replace the entire content of `frontend/src/pages/home/HomePage.tsx` with:
 
 ```tsx
-import { Container, Grid, Stack, Title, Text, Button, Badge, Paper, List } from '@mantine/core';
-import { IconArrowRight } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import {
+  Container,
+  Grid,
+  Stack,
+  Title,
+  Text,
+  Button,
+  Badge,
+  Paper,
+  List,
+} from "@mantine/core";
+import { IconArrowRight } from "@tabler/icons-react";
+import { Link } from "react-router-dom";
 
 export const HomePage = () => {
   return (
     <div
       style={{
-        background: 'linear-gradient(135deg, #EBF0FF 0%, #F8F9FA 50%, #FFF5F0 100%)',
-        minHeight: 'calc(100vh - 60px)',
+        background:
+          "linear-gradient(135deg, #EBF0FF 0%, #F8F9FA 50%, #FFF5F0 100%)",
+        minHeight: "calc(100vh - 60px)",
       }}
     >
       <Container size="lg" py={80}>
@@ -47,7 +60,7 @@ export const HomePage = () => {
                 color="dark"
                 size="lg"
                 radius="sm"
-                style={{ alignSelf: 'flex-start' }}
+                style={{ alignSelf: "flex-start" }}
               >
                 БЫСТРАЯ ЗАПИСЬ НА ЗВОНОК
               </Badge>
@@ -57,7 +70,8 @@ export const HomePage = () => {
               </Title>
 
               <Text c="dimmed" size="lg" maw={480}>
-                Забронируйте встречу за минуту: выберите тип события и удобное время.
+                Забронируйте встречу за минуту: выберите тип события и удобное
+                время.
               </Text>
 
               <Button
@@ -66,7 +80,7 @@ export const HomePage = () => {
                 size="lg"
                 radius="xl"
                 rightSection={<IconArrowRight size={18} />}
-                style={{ alignSelf: 'flex-start' }}
+                style={{ alignSelf: "flex-start" }}
               >
                 Записаться
               </Button>
@@ -79,17 +93,21 @@ export const HomePage = () => {
               p="xl"
               radius="lg"
               shadow="sm"
-              style={{ backgroundColor: 'rgba(255,255,255,0.85)' }}
+              style={{ backgroundColor: "rgba(255,255,255,0.85)" }}
             >
               <Stack gap="md">
                 <Title order={3}>Возможности</Title>
                 <List spacing="md" size="md" c="dimmed">
-                  <List.Item>Выбор типа события и удобного времени для встречи.</List.Item>
                   <List.Item>
-                    Быстрое бронирование с подтверждением и дополнительными заметками.
+                    Выбор типа события и удобного времени для встречи.
                   </List.Item>
                   <List.Item>
-                    Управление типами встреч и просмотр предстоящих записей в админке.
+                    Быстрое бронирование с подтверждением и дополнительными
+                    заметками.
+                  </List.Item>
+                  <List.Item>
+                    Управление типами встреч и просмотр предстоящих записей в
+                    админке.
                   </List.Item>
                 </List>
               </Stack>
@@ -118,9 +136,11 @@ Expected: No errors.
 ### Task 2: Redesign Booking Catalog Page
 
 **Files:**
+
 - Modify: `frontend/src/pages/booking/BookingCatalogPage.tsx`
 
 Design shows:
+
 - HostProfile is inside a centered bordered card at the top
 - Title is "Выберите тип события" (not "встречи")
 - Subtitle: "Нажмите на карточку, чтобы открыть календарь и выбрать удобный слот."
@@ -141,12 +161,12 @@ import {
   Center,
   Alert,
   Paper,
-} from '@mantine/core';
-import { IconAlertCircle } from '@tabler/icons-react';
-import { useNavigate } from 'react-router-dom';
-import { useEventTypes } from '@/entities/event-type/queries';
-import { EventTypeCard } from '@/widgets/event-type-card';
-import { HostProfile } from '@/widgets/host-profile';
+} from "@mantine/core";
+import { IconAlertCircle } from "@tabler/icons-react";
+import { useNavigate } from "react-router-dom";
+import { useEventTypes } from "@/entities/event-type/queries";
+import { EventTypeCard } from "@/widgets/event-type-card";
+import { HostProfile } from "@/widgets/host-profile";
 
 export const BookingCatalogPage = () => {
   const navigate = useNavigate();
@@ -161,7 +181,8 @@ export const BookingCatalogPage = () => {
             <Stack gap={4}>
               <Title order={2}>Выберите тип события</Title>
               <Text c="dimmed">
-                Нажмите на карточку, чтобы открыть календарь и выбрать удобный слот.
+                Нажмите на карточку, чтобы открыть календарь и выбрать удобный
+                слот.
               </Text>
             </Stack>
           </Stack>
@@ -177,10 +198,12 @@ export const BookingCatalogPage = () => {
           <Alert
             color="red"
             icon={<IconAlertCircle size={16} />}
-            radius="md"
+            radius="sm"
             title="Ошибка загрузки"
           >
-            {error instanceof Error ? error.message : 'Не удалось загрузить типы встреч'}
+            {error instanceof Error
+              ? error.message
+              : "Не удалось загрузить типы встреч"}
           </Alert>
         )}
 
@@ -230,9 +253,11 @@ Expected: No errors.
 ### Task 3: Redesign Booking Slots Page (3-column layout + info panel)
 
 **Files:**
+
 - Modify: `frontend/src/pages/booking/BookingSlotsPage.tsx`
 
 Design shows:
+
 - Large page title at the top: event name (e.g., "Встреча 15 минут")
 - 3-column layout below:
   - Left: Card with HostProfile, event info (name + badge + description), "Выбранная дата" block, "Выбранное время" block
@@ -258,25 +283,25 @@ import {
   Paper,
   Badge,
   Box,
-} from '@mantine/core';
-import { IconAlertCircle, IconArrowLeft } from '@tabler/icons-react';
-import { useState, useMemo } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { format } from 'date-fns';
-import { ru } from 'date-fns/locale';
-import { notifications } from '@mantine/notifications';
-import { useEventType } from '@/entities/event-type/queries';
-import { useSlots } from '@/entities/slot/queries';
-import { useCreateBooking } from '@/entities/booking/queries';
-import { Calendar } from '@/widgets/calendar';
-import { SlotsList } from '@/widgets/slots-list';
-import { HostProfile } from '@/widgets/host-profile';
-import { BookingModal } from '@/features/create-booking';
-import type { Slot } from '@/entities/slot/model';
-import type { BookingCreate } from '@/entities/booking/model';
+} from "@mantine/core";
+import { IconAlertCircle, IconArrowLeft } from "@tabler/icons-react";
+import { useState, useMemo } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { format } from "date-fns";
+import { ru } from "date-fns/locale";
+import { notifications } from "@mantine/notifications";
+import { useEventType } from "@/entities/event-type/queries";
+import { useSlots } from "@/entities/slot/queries";
+import { useCreateBooking } from "@/entities/booking/queries";
+import { Calendar } from "@/widgets/calendar";
+import { SlotsList } from "@/widgets/slots-list";
+import { HostProfile } from "@/widgets/host-profile";
+import { BookingModal } from "@/features/create-booking";
+import type { Slot } from "@/entities/slot/model";
+import type { BookingCreate } from "@/entities/booking/model";
 
 export const BookingSlotsPage = () => {
-  const { eventTypeId = '' } = useParams<{ eventTypeId: string }>();
+  const { eventTypeId = "" } = useParams<{ eventTypeId: string }>();
   const navigate = useNavigate();
 
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -285,7 +310,7 @@ export const BookingSlotsPage = () => {
   const [modalOpened, setModalOpened] = useState(false);
 
   const dateParam = useMemo(
-    () => format(selectedDate, 'yyyy-MM-dd'),
+    () => format(selectedDate, "yyyy-MM-dd"),
     [selectedDate],
   );
 
@@ -313,30 +338,34 @@ export const BookingSlotsPage = () => {
     createBooking.mutate(data, {
       onSuccess: () => {
         notifications.show({
-          title: 'Запись создана',
-          message: 'Мы отправили подтверждение на ваш email',
-          color: 'green',
+          title: "Запись создана",
+          message: "Мы отправили подтверждение на ваш email",
+          color: "green",
         });
         handleCloseModal();
       },
       onError: (err) => {
         notifications.show({
-          title: 'Ошибка',
-          message: err instanceof Error ? err.message : 'Не удалось создать запись',
-          color: 'red',
+          title: "Ошибка",
+          message:
+            err instanceof Error ? err.message : "Не удалось создать запись",
+          color: "red",
         });
       },
     });
   };
 
   const formatSelectedDate = () => {
-    return format(selectedDate, 'EEEE, d MMMM', { locale: ru });
+    return format(selectedDate, "EEEE, d MMMM", { locale: ru });
   };
 
   const formatSelectedTime = () => {
-    if (!selectedSlot) return 'Время не выбрано';
+    if (!selectedSlot) return "Время не выбрано";
     const start = new Date(selectedSlot.startTime);
-    return start.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+    return start.toLocaleTimeString("ru-RU", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   };
 
   if (isEventTypeLoading) {
@@ -353,7 +382,7 @@ export const BookingSlotsPage = () => {
         <Alert
           color="red"
           icon={<IconAlertCircle size={16} />}
-          radius="md"
+          radius="sm"
           title="Тип встречи не найден"
         >
           <Stack gap="md">
@@ -361,7 +390,7 @@ export const BookingSlotsPage = () => {
             <Button
               variant="light"
               leftSection={<IconArrowLeft size={16} />}
-              onClick={() => navigate('/booking')}
+              onClick={() => navigate("/booking")}
               w="fit-content"
             >
               К списку встреч
@@ -400,23 +429,31 @@ export const BookingSlotsPage = () => {
                 <Box
                   p="sm"
                   style={{
-                    backgroundColor: '#FFF5F0',
-                    borderRadius: '8px',
+                    backgroundColor: "#FFF5F0",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Text size="xs" c="dimmed">Выбранная дата</Text>
-                  <Text size="sm" fw={500}>{formatSelectedDate()}</Text>
+                  <Text size="xs" c="dimmed">
+                    Выбранная дата
+                  </Text>
+                  <Text size="sm" fw={500}>
+                    {formatSelectedDate()}
+                  </Text>
                 </Box>
 
                 <Box
                   p="sm"
                   style={{
-                    backgroundColor: '#FFF5F0',
-                    borderRadius: '8px',
+                    backgroundColor: "#FFF5F0",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Text size="xs" c="dimmed">Выбранное время</Text>
-                  <Text size="sm" fw={500}>{formatSelectedTime()}</Text>
+                  <Text size="xs" c="dimmed">
+                    Выбранное время
+                  </Text>
+                  <Text size="sm" fw={500}>
+                    {formatSelectedTime()}
+                  </Text>
                 </Box>
               </Stack>
             </Paper>
@@ -440,7 +477,7 @@ export const BookingSlotsPage = () => {
               <Alert
                 color="red"
                 icon={<IconAlertCircle size={16} />}
-                radius="md"
+                radius="sm"
               >
                 Не удалось загрузить слоты
               </Alert>
@@ -456,7 +493,7 @@ export const BookingSlotsPage = () => {
               <Button
                 variant="default"
                 radius="xl"
-                onClick={() => navigate('/booking')}
+                onClick={() => navigate("/booking")}
               >
                 Назад
               </Button>
@@ -501,6 +538,7 @@ Expected: No errors.
 ### Task 4: Add free slot counts to Calendar days
 
 **Files:**
+
 - Modify: `frontend/src/widgets/calendar/Calendar.tsx`
 
 In the design, calendar days in the booking window show the number of free slots (e.g., "33 св.", "35 св.") below the day number. This requires the Calendar widget to accept and display slot count data.
@@ -522,6 +560,7 @@ interface CalendarProps {
 Update the day rendering inside the `.map()` to show the count below the day number when a count > 0 exists:
 
 In the `Calendar` component, destructure the new prop:
+
 ```tsx
 export const Calendar = ({
   selectedDate,
@@ -533,32 +572,35 @@ export const Calendar = ({
 ```
 
 In the day cell, after the day number text, add:
+
 ```tsx
 <Box
   onClick={() => onSelectDate(day)}
   style={{
-    aspectRatio: '1',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-    borderRadius: '8px',
-    backgroundColor: isSelected ? '#F56A1C' : 'transparent',
-    color: isSelected ? '#fff' : isCurrentMonth ? '#212529' : '#ADB5BD',
+    aspectRatio: "1",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer",
+    borderRadius: "8px",
+    backgroundColor: isSelected ? "#F56A1C" : "transparent",
+    color: isSelected ? "#fff" : isCurrentMonth ? "#212529" : "#ADB5BD",
     fontWeight: isSelected ? 600 : 400,
   }}
 >
-  <Text size="sm">{format(day, 'd')}</Text>
-  {slotCounts && isCurrentMonth && (() => {
-    const key = format(day, 'yyyy-MM-dd');
-    const count = slotCounts[key];
-    return count && count > 0 ? (
-      <Text size="xs" c={isSelected ? 'white' : 'dimmed'} lh={1}>
-        {count} св.
-      </Text>
-    ) : null;
-  })()}
+  <Text size="sm">{format(day, "d")}</Text>
+  {slotCounts &&
+    isCurrentMonth &&
+    (() => {
+      const key = format(day, "yyyy-MM-dd");
+      const count = slotCounts[key];
+      return count && count > 0 ? (
+        <Text size="xs" c={isSelected ? "white" : "dimmed"} lh={1}>
+          {count} св.
+        </Text>
+      ) : null;
+    })()}
 </Box>
 ```
 
@@ -572,6 +614,7 @@ Expected: No errors. The `slotCounts` prop is optional, so existing usage in `Bo
 ### Task 5: Add e2e test for Home page
 
 **Files:**
+
 - Create: `frontend/e2e/home.spec.ts`
 
 - [ ] **Step 1: Write the home page e2e test**
@@ -579,45 +622,55 @@ Expected: No errors. The `slotCounts` prop is optional, so existing usage in `Bo
 Create `frontend/e2e/home.spec.ts`:
 
 ```ts
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test.describe('Главная страница', () => {
-  test('отображает hero-секцию с заголовком, описанием и кнопкой', async ({ page }) => {
-    await page.goto('/');
+test.describe("Главная страница", () => {
+  test("отображает hero-секцию с заголовком, описанием и кнопкой", async ({
+    page,
+  }) => {
+    await page.goto("/");
 
-    await expect(page.getByText('БЫСТРАЯ ЗАПИСЬ НА ЗВОНОК')).toBeVisible();
+    await expect(page.getByText("БЫСТРАЯ ЗАПИСЬ НА ЗВОНОК")).toBeVisible();
 
-    await expect(page.getByRole('heading', { name: 'Calendar' })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Calendar" })).toBeVisible();
 
     await expect(
-      page.getByText('Забронируйте встречу за минуту: выберите тип события и удобное время.'),
+      page.getByText(
+        "Забронируйте встречу за минуту: выберите тип события и удобное время.",
+      ),
     ).toBeVisible();
 
-    const ctaButton = page.getByRole('link', { name: 'Записаться' });
+    const ctaButton = page.getByRole("link", { name: "Записаться" });
     await expect(ctaButton).toBeVisible();
-    await expect(ctaButton).toHaveAttribute('href', '/booking');
+    await expect(ctaButton).toHaveAttribute("href", "/booking");
   });
 
-  test('отображает карточку возможностей', async ({ page }) => {
-    await page.goto('/');
-
-    await expect(page.getByRole('heading', { name: 'Возможности' })).toBeVisible();
+  test("отображает карточку возможностей", async ({ page }) => {
+    await page.goto("/");
 
     await expect(
-      page.getByText('Выбор типа события и удобного времени для встречи.'),
+      page.getByRole("heading", { name: "Возможности" }),
+    ).toBeVisible();
+
+    await expect(
+      page.getByText("Выбор типа события и удобного времени для встречи."),
     ).toBeVisible();
     await expect(
-      page.getByText('Быстрое бронирование с подтверждением и дополнительными заметками.'),
+      page.getByText(
+        "Быстрое бронирование с подтверждением и дополнительными заметками.",
+      ),
     ).toBeVisible();
     await expect(
-      page.getByText('Управление типами встреч и просмотр предстоящих записей в админке.'),
+      page.getByText(
+        "Управление типами встреч и просмотр предстоящих записей в админке.",
+      ),
     ).toBeVisible();
   });
 
   test('кнопка "Записаться" ведёт на каталог', async ({ page }) => {
-    await page.goto('/');
+    await page.goto("/");
 
-    await page.getByRole('link', { name: 'Записаться' }).click();
+    await page.getByRole("link", { name: "Записаться" }).click();
 
     await expect(page).toHaveURL(/\/booking$/);
   });

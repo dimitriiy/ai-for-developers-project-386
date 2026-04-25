@@ -12,26 +12,26 @@ import {
   Paper,
   Badge,
   Box,
-} from '@mantine/core';
-import { IconAlertCircle, IconArrowLeft } from '@tabler/icons-react';
-import { useState, useMemo } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { format } from 'date-fns';
-import { ru } from 'date-fns/locale';
-import { notifications } from '@mantine/notifications';
-import { useEventType } from '@/entities/event-type/queries';
-import { useSlots, useSlotCounts } from '@/entities/slot/queries';
-import { useCreateBooking } from '@/entities/booking/queries';
-import { Calendar } from '@/widgets/calendar';
-import { SlotsList } from '@/widgets/slots-list';
-import { HostProfile } from '@/widgets/host-profile';
-import { BookingModal } from '@/features/create-booking';
-import { generateDaySlots } from '@/shared/lib';
-import type { Slot } from '@/entities/slot/model';
-import type { BookingCreate } from '@/entities/booking/model';
+} from "@mantine/core";
+import { IconAlertCircle, IconArrowLeft } from "@tabler/icons-react";
+import { useState, useMemo } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { format } from "date-fns";
+import { ru } from "date-fns/locale";
+import { notifications } from "@mantine/notifications";
+import { useEventType } from "@/entities/event-type/queries";
+import { useSlots, useSlotCounts } from "@/entities/slot/queries";
+import { useCreateBooking } from "@/entities/booking/queries";
+import { Calendar } from "@/widgets/calendar";
+import { SlotsList } from "@/widgets/slots-list";
+import { HostProfile } from "@/widgets/host-profile";
+import { BookingModal } from "@/features/create-booking";
+import { generateDaySlots } from "@/shared/lib";
+import type { Slot } from "@/entities/slot/model";
+import type { BookingCreate } from "@/entities/booking/model";
 
 export const BookingSlotsPage = () => {
-  const { eventTypeId = '' } = useParams<{ eventTypeId: string }>();
+  const { eventTypeId = "" } = useParams<{ eventTypeId: string }>();
   const navigate = useNavigate();
 
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -40,7 +40,7 @@ export const BookingSlotsPage = () => {
   const [modalOpened, setModalOpened] = useState(false);
 
   const dateParam = useMemo(
-    () => format(selectedDate, 'yyyy-MM-dd'),
+    () => format(selectedDate, "yyyy-MM-dd"),
     [selectedDate],
   );
 
@@ -82,30 +82,34 @@ export const BookingSlotsPage = () => {
     createBooking.mutate(data, {
       onSuccess: () => {
         notifications.show({
-          title: 'Запись создана',
-          message: 'Мы отправили подтверждение на ваш email',
-          color: 'green',
+          title: "Запись создана",
+          message: "Мы отправили подтверждение на ваш email",
+          color: "green",
         });
         handleCloseModal();
       },
       onError: (err) => {
         notifications.show({
-          title: 'Ошибка',
-          message: err instanceof Error ? err.message : 'Не удалось создать запись',
-          color: 'red',
+          title: "Ошибка",
+          message:
+            err instanceof Error ? err.message : "Не удалось создать запись",
+          color: "red",
         });
       },
     });
   };
 
   const formatSelectedDate = () => {
-    return format(selectedDate, 'EEEE, d MMMM', { locale: ru });
+    return format(selectedDate, "EEEE, d MMMM", { locale: ru });
   };
 
   const formatSelectedTime = () => {
-    if (!selectedSlot) return 'Время не выбрано';
+    if (!selectedSlot) return "Время не выбрано";
     const start = new Date(selectedSlot.startTime);
-    return start.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+    return start.toLocaleTimeString("ru-RU", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   };
 
   if (isEventTypeLoading) {
@@ -122,7 +126,7 @@ export const BookingSlotsPage = () => {
         <Alert
           color="red"
           icon={<IconAlertCircle size={16} />}
-          radius="md"
+          radius="sm"
           title="Тип встречи не найден"
         >
           <Stack gap="md">
@@ -130,7 +134,7 @@ export const BookingSlotsPage = () => {
             <Button
               variant="light"
               leftSection={<IconArrowLeft size={16} />}
-              onClick={() => navigate('/booking')}
+              onClick={() => navigate("/booking")}
               w="fit-content"
             >
               К списку встреч
@@ -169,23 +173,31 @@ export const BookingSlotsPage = () => {
                 <Box
                   p="sm"
                   style={{
-                    backgroundColor: '#FFF5F0',
-                    borderRadius: '8px',
+                    backgroundColor: "#FFF5F0",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Text size="xs" c="dimmed">Выбранная дата</Text>
-                  <Text size="sm" fw={500}>{formatSelectedDate()}</Text>
+                  <Text size="xs" c="dimmed">
+                    Выбранная дата
+                  </Text>
+                  <Text size="sm" fw={500}>
+                    {formatSelectedDate()}
+                  </Text>
                 </Box>
 
                 <Box
                   p="sm"
                   style={{
-                    backgroundColor: '#FFF5F0',
-                    borderRadius: '8px',
+                    backgroundColor: "#FFF5F0",
+                    borderRadius: "8px",
                   }}
                 >
-                  <Text size="xs" c="dimmed">Выбранное время</Text>
-                  <Text size="sm" fw={500}>{formatSelectedTime()}</Text>
+                  <Text size="xs" c="dimmed">
+                    Выбранное время
+                  </Text>
+                  <Text size="sm" fw={500}>
+                    {formatSelectedTime()}
+                  </Text>
                 </Box>
               </Stack>
             </Paper>
@@ -213,13 +225,13 @@ export const BookingSlotsPage = () => {
             <Group justify="space-between" mt="md">
               <Button
                 variant="default"
-                radius="md"
-                onClick={() => navigate('/booking')}
+                radius="sm"
+                onClick={() => navigate("/booking")}
               >
                 Назад
               </Button>
               <Button
-                radius="md"
+                radius="sm"
                 disabled={!selectedSlot}
                 onClick={handleContinue}
               >

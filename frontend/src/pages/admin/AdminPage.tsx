@@ -13,7 +13,7 @@ import {
   Alert,
   Badge,
   Paper,
-} from '@mantine/core';
+} from "@mantine/core";
 import {
   IconAlertCircle,
   IconCalendarEvent,
@@ -21,25 +21,25 @@ import {
   IconEdit,
   IconPlus,
   IconTrash,
-} from '@tabler/icons-react';
-import { useState } from 'react';
-import { modals } from '@mantine/modals';
-import { notifications } from '@mantine/notifications';
-import { format } from 'date-fns';
-import { ru } from 'date-fns/locale';
+} from "@tabler/icons-react";
+import { useState } from "react";
+import { modals } from "@mantine/modals";
+import { notifications } from "@mantine/notifications";
+import { format } from "date-fns";
+import { ru } from "date-fns/locale";
 import {
   EventTypeModal,
   useAdminEventTypes,
   useCreateEventType,
   useUpdateEventType,
   useDeleteEventType,
-} from '@/features/manage-event-types';
-import { useAdminBookings } from '@/entities/booking/queries';
+} from "@/features/manage-event-types";
+import { useAdminBookings } from "@/entities/booking/queries";
 import type {
   EventType,
   EventTypeCreate,
   EventTypeUpdate,
-} from '@/shared/api/types';
+} from "@/shared/api/types";
 
 export const AdminPage = () => {
   const [modalOpened, setModalOpened] = useState(false);
@@ -71,17 +71,17 @@ export const AdminPage = () => {
   const handleSubmit = (data: EventTypeCreate | EventTypeUpdate) => {
     const onSuccess = () => {
       notifications.show({
-        title: editingType ? 'Тип обновлён' : 'Тип создан',
-        message: 'Изменения сохранены',
-        color: 'green',
+        title: editingType ? "Тип обновлён" : "Тип создан",
+        message: "Изменения сохранены",
+        color: "green",
       });
       handleCloseModal();
     };
     const onError = (err: unknown) => {
       notifications.show({
-        title: 'Ошибка',
-        message: err instanceof Error ? err.message : 'Не удалось сохранить',
-        color: 'red',
+        title: "Ошибка",
+        message: err instanceof Error ? err.message : "Не удалось сохранить",
+        color: "red",
       });
     };
 
@@ -97,28 +97,29 @@ export const AdminPage = () => {
 
   const handleDelete = (eventType: EventType) => {
     modals.openConfirmModal({
-      title: 'Удалить тип события?',
+      title: "Удалить тип события?",
       centered: true,
       children: (
         <Text size="sm">
           Тип «{eventType.name}» будет удалён. Это действие нельзя отменить.
         </Text>
       ),
-      labels: { confirm: 'Удалить', cancel: 'Отмена' },
-      confirmProps: { color: 'red' },
+      labels: { confirm: "Удалить", cancel: "Отмена" },
+      confirmProps: { color: "red" },
       onConfirm: () => {
         deleteMutation.mutate(eventType.id, {
           onSuccess: () =>
             notifications.show({
-              title: 'Удалено',
+              title: "Удалено",
               message: `Тип «${eventType.name}» удалён`,
-              color: 'green',
+              color: "green",
             }),
           onError: (err) =>
             notifications.show({
-              title: 'Ошибка',
-              message: err instanceof Error ? err.message : 'Не удалось удалить',
-              color: 'red',
+              title: "Ошибка",
+              message:
+                err instanceof Error ? err.message : "Не удалось удалить",
+              color: "red",
             }),
         });
       },
@@ -133,7 +134,7 @@ export const AdminPage = () => {
           <Text c="dimmed">Управление типами встреч и записями.</Text>
         </Stack>
 
-        <Tabs defaultValue="event-types" radius="md">
+        <Tabs defaultValue="event-types" radius="sm">
           <Tabs.List>
             <Tabs.Tab
               value="event-types"
@@ -170,7 +171,7 @@ export const AdminPage = () => {
                     color="red"
                     icon={<IconAlertCircle size={16} />}
                     m="md"
-                    radius="md"
+                    radius="sm"
                   >
                     Не удалось загрузить типы встреч
                   </Alert>
@@ -248,7 +249,7 @@ export const AdminPage = () => {
                   color="red"
                   icon={<IconAlertCircle size={16} />}
                   m="md"
-                  radius="md"
+                  radius="sm"
                 >
                   Не удалось загрузить записи
                 </Alert>
@@ -275,14 +276,18 @@ export const AdminPage = () => {
                         </Table.Td>
                         <Table.Td>
                           <Text size="sm">
-                            {format(new Date(booking.startTime), 'd MMM yyyy, HH:mm', {
-                              locale: ru,
-                            })}
+                            {format(
+                              new Date(booking.startTime),
+                              "d MMM yyyy, HH:mm",
+                              {
+                                locale: ru,
+                              },
+                            )}
                           </Text>
                         </Table.Td>
                         <Table.Td>
                           <Text size="sm">
-                            {format(new Date(booking.endTime), 'HH:mm', {
+                            {format(new Date(booking.endTime), "HH:mm", {
                               locale: ru,
                             })}
                           </Text>

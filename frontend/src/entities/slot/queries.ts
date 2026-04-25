@@ -1,9 +1,7 @@
-import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { format, addDays, startOfDay } from 'date-fns';
 import { getSlots } from '@/shared/api/slots';
 import { countFreeSlots } from '@/shared/lib';
-import type { Slot } from '@/shared/api/types';
 
 export const useSlots = (eventTypeId: string, date?: string) => useQuery({
   queryKey: ['slots', eventTypeId, date],
@@ -31,24 +29,21 @@ export const useSlotCounts = (eventTypeId: string, durationMinutes: number) => {
     staleTime: 5 * 60 * 1000,
   });
 
-  const slotCounts = useMemo(() => {
-    const result: Record<string, number> = {};
-    const slotsByDate = new Map<string, Slot[]>();
+  const slotCounts: Record<string, number> = {};
 
-    for (const slot of allSlots) {
-      const dateKey = format(new Date(slot.startTime), 'yyyy-MM-dd');
-      const existing = slotsByDate.get(dateKey) ?? [];
-      existing.push(slot);
-      slotsByDate.set(dateKey, existing);
-    }
+  // Group API slots by date, then count free slots per day
+  const slotsByDate = new Map<string, typeof allSlots>();
+  for (const slot of allSlots) {
+    const dateKey = format(new Date(slot.startTime), 'yyyy-MM-dd');
+    const existing = slotsByDate.get(dateKey) ?? [];
+    existing.push(slot);
+    slotsByDate.set(dateKey, existing);
+  }
 
-    dates.forEach((date) => {
-      const daySlots = slotsByDate.get(date) ?? [];
-      result[date] = countFreeSlots(date, durationMinutes, daySlots);
-    });
-
-    return result;
-  }, [allSlots, durationMinutes, dates]);
+  dates.forEach((date) => {
+    const daySlots = slotsByDate.get(date) ?? [];
+    slotCounts[date] = countFreeSlots(date, durationMinutes, daySlots);
+  });
 
   return { slotCounts, isLoading };
 };

@@ -3,7 +3,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
-import { useSlots } from './queries';
+import { useSlots, useSlotCounts } from './queries';
 import type { ReactNode } from 'react';
 
 const server = setupServer();
@@ -43,6 +43,50 @@ describe('useSlots', () => {
 
   it('should not fetch without eventTypeId', () => {
     const { result } = renderHook(() => useSlots(''), {
+      wrapper: createWrapper(),
+    });
+
+    expect(result.current.isLoading).toBe(false);
+  });
+});
+
+describe('useSlotCounts', () => {
+  it('should fetch all slots in a single request without date param', async () => {
+    const mockSlots = [
+      { startTime: '2025-01-24T10:00:00.000Z', endTime: '2025-01-24T10:30:00.000Z', status: 'free' },
+      { startTime: '2025-01-24T10:30:00.000Z', endTime: '2025-01-24T11:00:00.000Z', status: 'busy' },
+    ];
+
+    let requestCount = 0;
+    server.use(
+      http.get('http://localhost:3000/api/event-types/1/slots', ({ request }) => {
+        requestCount++;
+        const url = new URL(request.url);
+        // Verify no date param is sent — bulk request
+        expect(url.searchParams.has('date')).toBe(false);
+        return HttpResponse.json(mockSlots);
+      }),
+    );
+
+    const { result } = renderHook(() => useSlotCounts('1', 30), {
+      wrapper: createWrapper(),
+    });
+
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+    expect(requestCount).toBe(1);
+    expect(typeof result.current.slotCounts).toBe('object');
+  });
+
+  it('should not fetch without eventTypeId', () => {
+    const { result } = renderHook(() => useSlotCounts('', 30), {
+      wrapper: createWrapper(),
+    });
+
+    expect(result.current.isLoading).toBe(false);
+  });
+
+  it('should not fetch when durationMinutes is 0', () => {
+    const { result } = renderHook(() => useSlotCounts('1', 0), {
       wrapper: createWrapper(),
     });
 

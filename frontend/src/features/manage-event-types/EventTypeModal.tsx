@@ -6,14 +6,14 @@ import {
   NumberInput,
   Button,
   Group,
-} from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { useEffect } from 'react';
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { useEffect } from "react";
 import type {
   EventType,
   EventTypeCreate,
   EventTypeUpdate,
-} from '@/shared/api/types';
+} from "@/shared/api/types";
 
 interface EventTypeModalProps {
   opened: boolean;
@@ -30,8 +30,8 @@ interface EventTypeFormValues {
 }
 
 const DEFAULT_VALUES: EventTypeFormValues = {
-  name: '',
-  description: '',
+  name: "",
+  description: "",
   duration: 30,
 };
 
@@ -45,22 +45,22 @@ export const EventTypeModal = ({
   const isEditMode = Boolean(eventType);
 
   const form = useForm<EventTypeFormValues>({
-    mode: 'uncontrolled',
+    mode: "uncontrolled",
     initialValues: DEFAULT_VALUES,
     validate: {
       name: (value) => {
-        if (value.trim().length === 0) return 'Название обязательно';
-        if (value.length > 100) return 'Максимум 100 символов';
+        if (value.trim().length === 0) return "Название обязательно";
+        if (value.length > 100) return "Максимум 100 символов";
         return null;
       },
       description: (value) => {
-        if (value.trim().length === 0) return 'Описание обязательно';
-        if (value.length > 500) return 'Максимум 500 символов';
+        if (value.trim().length === 0) return "Описание обязательно";
+        if (value.length > 500) return "Максимум 500 символов";
         return null;
       },
       duration: (value) => {
-        if (!value || value < 5) return 'Минимум 5 минут';
-        if (value > 480) return 'Максимум 480 минут';
+        if (!value || value < 5) return "Минимум 5 минут";
+        if (value > 480) return "Максимум 480 минут";
         return null;
       },
     },
@@ -94,7 +94,7 @@ export const EventTypeModal = ({
     <Modal
       opened={opened}
       onClose={onClose}
-      title={isEditMode ? 'Редактировать тип события' : 'Создать тип события'}
+      title={isEditMode ? "Редактировать тип события" : "Создать тип события"}
       centered
       radius="lg"
       size="md"
@@ -105,29 +105,29 @@ export const EventTypeModal = ({
             label="Название"
             placeholder="Встреча 30 минут"
             required
-            radius="md"
-            key={form.key('name')}
-            {...form.getInputProps('name')}
+            radius="sm"
+            key={form.key("name")}
+            {...form.getInputProps("name")}
           />
           <Textarea
             label="Описание"
             placeholder="Краткое описание"
             required
-            radius="md"
+            radius="sm"
             minRows={3}
             autosize
-            key={form.key('description')}
-            {...form.getInputProps('description')}
+            key={form.key("description")}
+            {...form.getInputProps("description")}
           />
           <NumberInput
             label="Длительность (минут)"
             required
-            radius="md"
+            radius="sm"
             min={5}
             max={480}
             step={5}
-            key={form.key('duration')}
-            {...form.getInputProps('duration')}
+            key={form.key("duration")}
+            {...form.getInputProps("duration")}
           />
 
           <Group justify="flex-end" mt="sm">
@@ -140,7 +140,7 @@ export const EventTypeModal = ({
               Отмена
             </Button>
             <Button type="submit" loading={isSubmitting}>
-              {isEditMode ? 'Сохранить' : 'Создать'}
+              {isEditMode ? "Сохранить" : "Создать"}
             </Button>
           </Group>
         </Stack>

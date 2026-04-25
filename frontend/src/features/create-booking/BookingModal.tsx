@@ -7,14 +7,14 @@ import {
   Text,
   Divider,
   Box,
-} from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { useEffect } from 'react';
-import { format } from 'date-fns';
-import { ru } from 'date-fns/locale';
-import type { Slot } from '@/entities/slot/model';
-import type { EventType } from '@/entities/event-type/model';
-import type { BookingCreate } from '@/entities/booking/model';
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { useEffect } from "react";
+import { format } from "date-fns";
+import { ru } from "date-fns/locale";
+import type { Slot } from "@/entities/slot/model";
+import type { EventType } from "@/entities/event-type/model";
+import type { BookingCreate } from "@/entities/booking/model";
 
 interface BookingModalProps {
   opened: boolean;
@@ -39,18 +39,18 @@ export const BookingModal = ({
   isSubmitting = false,
 }: BookingModalProps) => {
   const form = useForm<BookingFormValues>({
-    mode: 'uncontrolled',
+    mode: "uncontrolled",
     initialValues: {
-      guestName: '',
-      guestEmail: '',
+      guestName: "",
+      guestEmail: "",
     },
     validate: {
       guestName: (value) =>
-        value.trim().length === 0 ? 'Имя обязательно' : null,
+        value.trim().length === 0 ? "Имя обязательно" : null,
       guestEmail: (value) => {
-        if (value.trim().length === 0) return 'Email обязателен';
+        if (value.trim().length === 0) return "Email обязателен";
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
-          return 'Некорректный email';
+          return "Некорректный email";
         return null;
       },
     },
@@ -75,7 +75,7 @@ export const BookingModal = ({
 
   const formatDateTime = (iso: string) => {
     const date = new Date(iso);
-    return format(date, 'd MMMM yyyy, HH:mm', { locale: ru });
+    return format(date, "d MMMM yyyy, HH:mm", { locale: ru });
   };
 
   return (
@@ -91,7 +91,7 @@ export const BookingModal = ({
         {eventType && slot && (
           <Box
             p="md"
-            style={{ backgroundColor: '#FFF5F0', borderRadius: '8px' }}
+            style={{ backgroundColor: "#FFF5F0", borderRadius: "8px" }}
           >
             <Stack gap="xs">
               <Text fw={600} size="md">
@@ -120,18 +120,18 @@ export const BookingModal = ({
               label="Ваше имя"
               placeholder="Иван Иванов"
               required
-              radius="md"
-              key={form.key('guestName')}
-              {...form.getInputProps('guestName')}
+              radius="sm"
+              key={form.key("guestName")}
+              {...form.getInputProps("guestName")}
             />
             <TextInput
               label="Email"
               placeholder="ivan@example.com"
               required
-              radius="md"
+              radius="sm"
               type="email"
-              key={form.key('guestEmail')}
-              {...form.getInputProps('guestEmail')}
+              key={form.key("guestEmail")}
+              {...form.getInputProps("guestEmail")}
             />
 
             <Group justify="flex-end" mt="sm">

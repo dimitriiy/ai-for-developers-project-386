@@ -8,12 +8,12 @@ import {
   Center,
   Alert,
   Paper,
-} from '@mantine/core';
-import { IconAlertCircle } from '@tabler/icons-react';
-import { useNavigate } from 'react-router-dom';
-import { useEventTypes } from '@/entities/event-type/queries';
-import { EventTypeCard } from '@/widgets/event-type-card';
-import { HostProfile } from '@/widgets/host-profile';
+} from "@mantine/core";
+import { IconAlertCircle } from "@tabler/icons-react";
+import { useNavigate } from "react-router-dom";
+import { useEventTypes } from "@/entities/event-type/queries";
+import { EventTypeCard } from "@/widgets/event-type-card";
+import { HostProfile } from "@/widgets/host-profile";
 
 export const BookingCatalogPage = () => {
   const navigate = useNavigate();
@@ -28,7 +28,8 @@ export const BookingCatalogPage = () => {
             <Stack gap={4}>
               <Title order={2}>Выберите тип события</Title>
               <Text c="dimmed">
-                Нажмите на карточку, чтобы открыть календарь и выбрать удобный слот.
+                Нажмите на карточку, чтобы открыть календарь и выбрать удобный
+                слот.
               </Text>
             </Stack>
           </Stack>
@@ -44,10 +45,12 @@ export const BookingCatalogPage = () => {
           <Alert
             color="red"
             icon={<IconAlertCircle size={16} />}
-            radius="md"
+            radius="sm"
             title="Ошибка загрузки"
           >
-            {error instanceof Error ? error.message : 'Не удалось загрузить типы встреч'}
+            {error instanceof Error
+              ? error.message
+              : "Не удалось загрузить типы встреч"}
           </Alert>
         )}
 
