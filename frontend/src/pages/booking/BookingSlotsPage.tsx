@@ -16,7 +16,7 @@ import {
 import { IconAlertCircle, IconArrowLeft } from "@tabler/icons-react";
 import { useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { format } from "date-fns";
+import { format, addDays, startOfDay, isAfter } from "date-fns";
 import { ru } from "date-fns/locale";
 import { notifications } from "@mantine/notifications";
 import { useEventType } from "@/entities/event-type/queries";
@@ -30,6 +30,8 @@ import { generateDaySlots } from "@/shared/lib";
 import type { Slot } from "@/entities/slot/model";
 import type { BookingCreate } from "@/entities/booking/model";
 
+const BOOKING_WINDOW_DAYS = 14;
+
 export const BookingSlotsPage = () => {
   const { eventTypeId = "" } = useParams<{ eventTypeId: string }>();
   const navigate = useNavigate();
@@ -38,6 +40,12 @@ export const BookingSlotsPage = () => {
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
   const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
   const [modalOpened, setModalOpened] = useState(false);
+
+  const isDateAvailable = (date: Date): boolean => {
+    const today = startOfDay(new Date());
+    const maxDate = addDays(today, BOOKING_WINDOW_DAYS);
+    return !isAfter(date, maxDate);
+  };
 
   const dateParam = useMemo(
     () => format(selectedDate, "yyyy-MM-dd"),
@@ -62,6 +70,18 @@ export const BookingSlotsPage = () => {
   }, [dateParam, duration, apiSlots, isSlotsLoading]);
 
   const createBooking = useCreateBooking();
+
+  const handleSelectDate = (date: Date) => {
+    if (isDateAvailable(date)) {
+      setSelectedDate(date);
+    } else {
+      notifications.show({
+        title: "Недоступная дата",
+        message: `Запись доступна только на ближайшие ${BOOKING_WINDOW_DAYS} дней`,
+        color: "orange",
+      });
+    }
+  };
 
   const handleSelectSlot = (slot: Slot) => {
     setSelectedSlot(slot);
@@ -206,7 +226,7 @@ export const BookingSlotsPage = () => {
           <Grid.Col span={{ base: 12, md: 5 }}>
             <Calendar
               selectedDate={selectedDate}
-              onSelectDate={setSelectedDate}
+              onSelectDate={handleSelectDate}
               currentMonth={currentMonth}
               onMonthChange={setCurrentMonth}
               slotCounts={slotCounts}

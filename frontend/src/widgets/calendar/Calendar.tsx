@@ -54,9 +54,9 @@ export const Calendar = ({
     onMonthChange(addMonths(currentMonth, 1));
   };
 
-  const getDayBackground = (isCurrentMonth: boolean) => {
-    if (isCurrentMonth) return '#E9ECEF';
-    return 'transparent';
+  const getDayBackground = (isCurrentMonth: boolean, hasAvailableSlots: boolean) => {
+    if (!isCurrentMonth) return 'transparent';
+    return hasAvailableSlots ? '#fff' : '#f2f6fa';
   };
 
   return (
@@ -89,33 +89,35 @@ export const Calendar = ({
             </Grid.Col>
           ))}
 
-          {days.map((day) => {
+           {days.map((day) => {
             const isSelected = isSameDay(day, selectedDate);
             const isCurrentMonth = isSameMonth(day, currentMonth);
             const key = format(day, 'yyyy-MM-dd');
             const count = slotCounts?.[key];
-            const hasCount = isCurrentMonth && count !== undefined && count > 0;
+            const hasAvailableSlots = isCurrentMonth && count !== undefined && count > 0;
+            const isClickable = isCurrentMonth && count !== undefined;
 
             return (
               <Grid.Col key={day.toISOString()} span={1}>
-                <Box
-                  onClick={() => onSelectDate(day)}
-                  style={{
-                    aspectRatio: '1',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    borderRadius: '6px',
-                    backgroundColor: getDayBackground(isCurrentMonth),
-                    color: isCurrentMonth ? '#212529' : '#ADB5BD',
-                    fontWeight: isSelected ? 600 : 400,
-                    border: isSelected ? '2px solid #333' : '1px solid transparent',
-                  }}
-                >
+                 <Box
+                   onClick={() => isClickable && onSelectDate(day)}
+                   style={{
+                     aspectRatio: '1',
+                     display: 'flex',
+                     flexDirection: 'column',
+                     alignItems: 'center',
+                     justifyContent: 'center',
+                     cursor: isClickable ? 'pointer' : 'default',
+                     borderRadius: '6px',
+                     backgroundColor: getDayBackground(isCurrentMonth, hasAvailableSlots),
+                     color: isCurrentMonth ? '#212529' : '#ADB5BD',
+                     fontWeight: isSelected ? 600 : 400,
+                     border: isSelected ? '2px solid #333' : '1px solid transparent',
+                     opacity: isCurrentMonth && !isClickable ? 0.5 : 1,
+                   }}
+                 >
                   <Text size="sm" lh={1.3}>{format(day, 'd')}</Text>
-                  {hasCount && (
+                  {hasAvailableSlots && (
                     <Text fz={9} c="dimmed" lh={1}>
                       {count} св.
                     </Text>

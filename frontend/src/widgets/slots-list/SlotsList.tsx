@@ -58,16 +58,16 @@ export const SlotsList = ({
                 const isSelected = selectedSlot?.startTime === slot.startTime;
 
                 return (
-                  <Group
+                    <Group
                     key={index}
                     justify="space-between"
                     p="sm"
                     style={{
                       borderRadius: "8px",
-                      backgroundColor: isSelected ? "#FFF5F0" : "#F8F9FA",
+                      backgroundColor: isSelected ? "#FFF5F0" : (isFree ? "#fff" : "#f2f6fa"),
                       border: isSelected
                         ? "1px solid #F56A1C"
-                        : "1px solid transparent",
+                        : "1px solid #e9ecef",
                       cursor: isFree ? "pointer" : "default",
                     }}
                     onClick={() => isFree && onSelectSlot(slot)}
