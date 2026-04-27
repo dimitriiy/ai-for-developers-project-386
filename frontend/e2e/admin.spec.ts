@@ -103,11 +103,66 @@ test.describe('Владелец календаря (админка)', () => {
 
     // Новый тип появился в таблице (mock присваивает id автоматически)
     await expect(page.getByText('Демо продукта')).toBeVisible();
-    await expect(page.getByText('Полная демонстрация возможностей')).toBeVisible();
+    await expect(
+      page.locator('table tbody').getByText('Полная демонстрация возможностей'),
+    ).toBeVisible();
     await expect(page.getByText('45 мин')).toBeVisible();
 
     // У созданного типа есть непустой id (требование: владелец задаёт id типа)
     expect(state.eventTypes).toHaveLength(1);
     expect(state.eventTypes[0].id).toBeTruthy();
+  });
+
+  test('редактирует существующий тип события', async ({ page }) => {
+    const state = await installApiMocks(page, {
+      eventTypes: seedEventTypes,
+      bookings: [],
+    });
+
+    await page.goto('/admin');
+    await expect(page.getByText('Вводный звонок')).toBeVisible();
+
+    await page.getByRole('button', { name: 'Редактировать' }).click();
+
+    const dialog = page.getByRole('dialog', { name: 'Редактировать тип события' });
+    await expect(dialog).toBeVisible();
+
+    // Меняем название и длительность
+    await dialog.getByLabel('Название').fill('Вводный звонок (обновлённый)');
+    await dialog.getByLabel('Длительность (минут)').fill('60');
+
+    await dialog.getByRole('button', { name: 'Сохранить' }).click();
+
+    // В стейте мока тип обновлён
+    await expect.poll(() => state.eventTypes[0]).toMatchObject({
+      name: 'Вводный звонок (обновлённый)',
+      duration: 60,
+    });
+
+    await expect(page.getByText('Вводный звонок (обновлённый)')).toBeVisible();
+    await expect(page.getByText('60 мин')).toBeVisible();
+  });
+
+  test('удаляет тип события с подтверждением', async ({ page }) => {
+    const state = await installApiMocks(page, {
+      eventTypes: seedEventTypes,
+      bookings: [],
+    });
+
+    await page.goto('/admin');
+    await expect(page.getByText('Вводный звонок')).toBeVisible();
+
+    await page.getByRole('button', { name: 'Удалить' }).click();
+
+    // Диалог подтверждения
+    const confirmDialog = page.getByRole('dialog', { name: 'Удалить тип события?' });
+    await expect(confirmDialog).toBeVisible();
+    await expect(confirmDialog.getByText('Вводный звонок')).toBeVisible();
+
+    await confirmDialog.getByRole('button', { name: 'Удалить' }).click();
+
+    // Тип удалён из стейта
+    expect(state.eventTypes).toHaveLength(0);
+    await expect(page.getByText('Нет типов встреч. Добавьте первый.')).toBeVisible();
   });
 });

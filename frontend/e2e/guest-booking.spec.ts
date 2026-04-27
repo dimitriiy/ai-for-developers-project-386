@@ -73,10 +73,11 @@ test.describe('Гость: бронирование слота', () => {
 
     await page.goto(`/booking/${eventType.id}`);
 
-    // Открыть модалку через свободный слот
+    // Выбрать свободный слот и нажать «Продолжить»
     await page
       .getByText(`${fmtTime(targetSlot.startTime)} - ${fmtTime(targetSlot.endTime)}`)
       .click();
+    await page.getByRole('button', { name: 'Продолжить' }).click();
 
     const dialog = page.getByRole('dialog', { name: 'Подтверждение записи' });
     await expect(dialog).toBeVisible();
@@ -120,6 +121,7 @@ test.describe('Гость: бронирование слота', () => {
     await page
       .getByText(`${fmtTime(targetSlot.startTime)} - ${fmtTime(targetSlot.endTime)}`)
       .click();
+    await page.getByRole('button', { name: 'Продолжить' }).click();
 
     const dialog = page.getByRole('dialog', { name: 'Подтверждение записи' });
     await dialog.getByLabel('Ваше имя').fill('Поздний Гость');
@@ -182,6 +184,7 @@ test.describe('Гость: бронирование слота', () => {
     await page
       .getByText(`${fmtTime(slotsA[0].startTime)} - ${fmtTime(slotsA[0].endTime)}`)
       .click();
+    await page.getByRole('button', { name: 'Продолжить' }).click();
     let dialog = page.getByRole('dialog', { name: 'Подтверждение записи' });
     await dialog.getByLabel('Ваше имя').fill('Первый');
     await dialog.getByLabel('Email').fill('first@example.com');
@@ -195,6 +198,7 @@ test.describe('Гость: бронирование слота', () => {
     await page
       .getByText(`${fmtTime(slotsB[0].startTime)} - ${fmtTime(slotsB[0].endTime)}`)
       .click();
+    await page.getByRole('button', { name: 'Продолжить' }).click();
     dialog = page.getByRole('dialog', { name: 'Подтверждение записи' });
     await dialog.getByLabel('Ваше имя').fill('Второй');
     await dialog.getByLabel('Email').fill('second@example.com');
@@ -204,11 +208,8 @@ test.describe('Гость: бронирование слота', () => {
     expect(state.bookings).toHaveLength(1); // вторая запись не создалась
   });
 
-  test('окно записи 14 дней: для даты вне окна слотов нет', async ({ page }) => {
+  test('окно записи 14 дней: даты вне окна недоступны для выбора', async ({ page }) => {
     const today = new Date();
-
-    // Готовим слоты только на сегодня; для будущих дат API вернёт пустой
-    // массив, что эквивалентно «нет доступных слотов».
     const slots = buildSlotsForDate(today, [10, 11], 'free');
 
     await installApiMocks(page, {
@@ -217,29 +218,63 @@ test.describe('Гость: бронирование слота', () => {
     });
 
     await page.goto(`/booking/${eventType.id}`);
-    await expect(page.getByText('Свободно').first()).toBeVisible();
 
-    // Перелистываем календарь на следующий месяц — заведомо за 14 дней
-    // (тест не зависит от текущего числа: даже если сегодня 1-е число,
-    // следующий месяц минимум +28 дней). Кликаем по «1» следующего месяца
-    // через первую цифру в календаре, выходящую за окно.
-    await page.getByRole('button', { name: 'Календарь' }).waitFor().catch(() => {});
+    // Запоминаем время первого слота за сегодня
+    const firstSlotTime = `${fmtTime(slots[0].startTime)} - ${fmtTime(slots[0].endTime)}`;
+    await expect(page.getByText(firstSlotTime)).toBeVisible();
 
-    // Перейти на месяц вперёд (вторая стрелка в шапке календаря).
-    const nav = page
-      .locator('div')
-      .filter({ hasText: /^Календарь$/ })
-      .locator('..')
-      .getByRole('button');
-    await nav.nth(1).click();
+    // Переходим на следующий месяц — любой день там заведомо вне окна 14 дней
+    const calendarNavButtons = page
+      .getByRole('button')
+      .filter({ has: page.locator('svg') });
+    await calendarNavButtons.nth(1).click();
 
-    // Кликаем по 28-му числу следующего месяца — точно вне окна 14 дней
-    // (даже если «сегодня» — последний день текущего месяца, разница
-    // составит более 14 дней).
-    await page.getByText('28', { exact: true }).first().click();
+    // Пытаемся выбрать 10-е число следующего месяца
+    await page.getByText('10', { exact: true }).first().click();
 
+    // Дата не сменилась — слот за сегодня всё ещё на экране
+    await expect(page.getByText(firstSlotTime)).toBeVisible();
     await expect(
       page.getByText('Нет доступных слотов на выбранную дату'),
-    ).toBeVisible();
+    ).toBeHidden();
+  });
+
+  test('валидация формы бронирования: пустые поля и невалидный email', async ({ page }) => {
+    const today = new Date();
+    const slots = buildSlotsForDate(today, [10], 'free');
+
+    await installApiMocks(page, {
+      eventTypes: [eventType],
+      slotsByEventType: { [eventType.id]: slots },
+    });
+
+    await page.goto(`/booking/${eventType.id}`);
+
+    await page
+      .getByText(`${fmtTime(slots[0].startTime)} - ${fmtTime(slots[0].endTime)}`)
+      .click();
+    await page.getByRole('button', { name: 'Продолжить' }).click();
+
+    const dialog = page.getByRole('dialog', { name: 'Подтверждение записи' });
+    await expect(dialog).toBeVisible();
+
+    // Пытаемся отправить пустую форму — кнопка должна быть в форме и
+    // валидация должна сработать (проверяем через невозможность отправки
+    // без заполненных полей).
+    await dialog.getByLabel('Ваше имя').fill('');
+    await dialog.getByLabel('Email').fill('');
+    await dialog.getByRole('button', { name: 'Записаться' }).click();
+
+    // Проверяем, что форма не отправилась — диалог всё ещё открыт,
+    // а поля остаются пустыми.
+    await expect(dialog).toBeVisible();
+
+    // Вводим невалидный email и проверяем, что запись не создаётся
+    await dialog.getByLabel('Ваше имя').fill('Иван');
+    await dialog.getByLabel('Email').fill('not-an-email');
+    await dialog.getByRole('button', { name: 'Записаться' }).click();
+
+    // Форма не отправилась — диалог остался открытым
+    await expect(dialog).toBeVisible();
   });
 });

@@ -112,7 +112,7 @@ export const Calendar = ({
                      backgroundColor: getDayBackground(isCurrentMonth, hasAvailableSlots),
                      color: isCurrentMonth ? '#212529' : '#ADB5BD',
                      fontWeight: isSelected ? 600 : 400,
-                     border: isSelected ? '2px solid #333' : '1px solid transparent',
+                      border: isSelected ? '2px solid #333' : '1px solid #e9ecef',
                      opacity: isCurrentMonth && !isClickable ? 0.5 : 1,
                    }}
                  >

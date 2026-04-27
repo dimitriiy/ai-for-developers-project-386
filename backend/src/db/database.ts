@@ -27,6 +27,10 @@ export const initDb = async (): Promise<AppDatabase> => {
     );
 
     CREATE INDEX IF NOT EXISTS idx_bookings_time ON bookings(start_time, end_time);
+
+  INSERT OR IGNORE INTO event_types (id, name, description, duration) VALUES
+    ('et-15', 'Встреча 15 минут', 'Короткий тип события для быстрого слота.', 15),
+    ('et-30', 'Встреча 30 минут', 'Базовый тип события для бронирования.', 30);
   `);
 
   return db;
