@@ -30,7 +30,7 @@ FROM node:${NODE_VERSION} AS production
 
 ENV NODE_ENV=production
 
-COPY backend/package.json backend/уyarn.lock ./
+COPY backend/package.json backend/yarn.lock ./
 
 RUN yarn install --immutable --production
 
