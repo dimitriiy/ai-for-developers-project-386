@@ -1,0 +1,9 @@
+.header {
+  border-bottom: 1px solid #E9ECEF;
+  background-color: #fff;
+}
+
+.logoLink {
+  text-decoration: none;
+  color: inherit;
+}

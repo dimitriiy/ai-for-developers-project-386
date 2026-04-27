@@ -29,6 +29,7 @@ import { BookingModal } from "@/features/create-booking";
 import { generateDaySlots } from "@/shared/lib";
 import type { Slot } from "@/entities/slot/model";
 import type { BookingCreate } from "@/entities/booking/model";
+import classes from "./BookingSlotsPage.module.css";
 
 const BOOKING_WINDOW_DAYS = 14;
 
@@ -190,13 +191,7 @@ export const BookingSlotsPage = () => {
                   </Text>
                 </Stack>
 
-                <Box
-                  p="sm"
-                  style={{
-                    backgroundColor: "#FFF5F0",
-                    borderRadius: "8px",
-                  }}
-                >
+                <Box p="sm" className={classes.infoBox}>
                   <Text size="xs" c="dimmed">
                     Выбранная дата
                   </Text>
@@ -205,13 +200,7 @@ export const BookingSlotsPage = () => {
                   </Text>
                 </Box>
 
-                <Box
-                  p="sm"
-                  style={{
-                    backgroundColor: "#FFF5F0",
-                    borderRadius: "8px",
-                  }}
-                >
+                <Box p="sm" className={classes.infoBox}>
                   <Text size="xs" c="dimmed">
                     Выбранное время
                   </Text>

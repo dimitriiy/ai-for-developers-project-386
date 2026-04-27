@@ -1,5 +1,4 @@
 import {
-  Box,
   Group,
   Button,
   Text,
@@ -13,14 +12,13 @@ import {
   startOfMonth,
   endOfMonth,
   eachDayOfInterval,
-  isSameMonth,
-  isSameDay,
   addMonths,
   subMonths,
   startOfWeek,
   endOfWeek,
 } from 'date-fns';
 import { ru } from 'date-fns/locale';
+import { CalendarDayCell } from './CalendarDayCell';
 
 interface CalendarProps {
   selectedDate: Date;
@@ -54,11 +52,6 @@ export const Calendar = ({
     onMonthChange(addMonths(currentMonth, 1));
   };
 
-  const getDayBackground = (isCurrentMonth: boolean, hasAvailableSlots: boolean) => {
-    if (!isCurrentMonth) return 'transparent';
-    return hasAvailableSlots ? '#fff' : '#f2f6fa';
-  };
-
   return (
     <Paper withBorder p="lg" radius="lg">
       <Stack gap="md">
@@ -89,40 +82,19 @@ export const Calendar = ({
             </Grid.Col>
           ))}
 
-           {days.map((day) => {
-            const isSelected = isSameDay(day, selectedDate);
-            const isCurrentMonth = isSameMonth(day, currentMonth);
+          {days.map((day) => {
             const key = format(day, 'yyyy-MM-dd');
             const count = slotCounts?.[key];
-            const hasAvailableSlots = isCurrentMonth && count !== undefined && count > 0;
-            const isClickable = isCurrentMonth && count !== undefined;
 
             return (
               <Grid.Col key={day.toISOString()} span={1}>
-                 <Box
-                   onClick={() => isClickable && onSelectDate(day)}
-                   style={{
-                     aspectRatio: '1',
-                     display: 'flex',
-                     flexDirection: 'column',
-                     alignItems: 'center',
-                     justifyContent: 'center',
-                     cursor: isClickable ? 'pointer' : 'default',
-                     borderRadius: '6px',
-                     backgroundColor: getDayBackground(isCurrentMonth, hasAvailableSlots),
-                     color: isCurrentMonth ? '#212529' : '#ADB5BD',
-                     fontWeight: isSelected ? 600 : 400,
-                      border: isSelected ? '2px solid #333' : '1px solid #e9ecef',
-                     opacity: isCurrentMonth && !isClickable ? 0.5 : 1,
-                   }}
-                 >
-                  <Text size="sm" lh={1.3}>{format(day, 'd')}</Text>
-                  {hasAvailableSlots && (
-                    <Text fz={9} c="dimmed" lh={1}>
-                      {count} св.
-                    </Text>
-                  )}
-                </Box>
+                <CalendarDayCell
+                  day={day}
+                  selectedDate={selectedDate}
+                  currentMonth={currentMonth}
+                  count={count}
+                  onSelect={onSelectDate}
+                />
               </Grid.Col>
             );
           })}

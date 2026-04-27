@@ -1,0 +1,12 @@
+.heroSection {
+  background: linear-gradient(135deg, #EBF0FF 0%, #F8F9FA 50%, #FFF5F0 100%);
+  min-height: calc(100vh - 60px);
+}
+
+.alignSelfStart {
+  align-self: flex-start;
+}
+
+.glassCard {
+  background-color: rgba(255, 255, 255, 0.85);
+}

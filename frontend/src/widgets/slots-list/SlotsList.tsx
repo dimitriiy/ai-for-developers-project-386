@@ -11,6 +11,7 @@ import {
 } from "@mantine/core";
 import { IconAlertCircle } from "@tabler/icons-react";
 import type { Slot } from "@/entities/slot/model";
+import classes from "./SlotsList.module.css";
 
 interface SlotsListProps {
   slots: Slot[];
@@ -43,7 +44,7 @@ export const SlotsList = ({
         </Text>
 
         {isLoading ? (
-          <Center py="xl" style={{ flex: 1 }}>
+          <Center py="xl" className={classes.loaderCenter}>
             <Loader />
           </Center>
         ) : isError ? (
@@ -62,8 +63,8 @@ export const SlotsList = ({
                     key={index}
                     justify="space-between"
                     p="sm"
+                    className={classes.slotItem}
                     style={{
-                      borderRadius: "8px",
                       backgroundColor: isSelected ? "#FFF5F0" : (isFree ? "#fff" : "#f2f6fa"),
                       border: isSelected
                         ? "1px solid #F56A1C"

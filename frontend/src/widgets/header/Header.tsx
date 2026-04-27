@@ -1,18 +1,14 @@
 import { Container, Group, Button, Text } from '@mantine/core';
 import { IconCalendar } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import classes from './Header.module.css';
 
 export const Header = () => {
   return (
-    <header
-      style={{
-        borderBottom: '1px solid #E9ECEF',
-        backgroundColor: '#fff',
-      }}
-    >
+    <header className={classes.header}>
       <Container size="lg" py="md">
         <Group justify="space-between">
-          <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Link to="/" className={classes.logoLink}>
             <Group gap="xs">
               <IconCalendar size={24} color="#F56A1C" />
               <Text fw={700} size="lg">

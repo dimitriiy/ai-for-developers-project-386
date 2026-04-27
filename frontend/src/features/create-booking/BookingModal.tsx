@@ -15,6 +15,8 @@ import { ru } from "date-fns/locale";
 import type { Slot } from "@/entities/slot/model";
 import type { EventType } from "@/entities/event-type/model";
 import type { BookingCreate } from "@/entities/booking/model";
+import { bookingValidation, type BookingFormValues } from "./validation";
+import classes from "./BookingModal.module.css";
 
 interface BookingModalProps {
   opened: boolean;
@@ -23,11 +25,6 @@ interface BookingModalProps {
   eventType: EventType | null;
   onSubmit: (data: BookingCreate) => void;
   isSubmitting?: boolean;
-}
-
-interface BookingFormValues {
-  guestName: string;
-  guestEmail: string;
 }
 
 export const BookingModal = ({
@@ -44,16 +41,7 @@ export const BookingModal = ({
       guestName: "",
       guestEmail: "",
     },
-    validate: {
-      guestName: (value) =>
-        value.trim().length === 0 ? "Имя обязательно" : null,
-      guestEmail: (value) => {
-        if (value.trim().length === 0) return "Email обязателен";
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
-          return "Некорректный email";
-        return null;
-      },
-    },
+    validate: bookingValidation,
   });
 
   useEffect(() => {
@@ -89,10 +77,7 @@ export const BookingModal = ({
     >
       <Stack gap="md">
         {eventType && slot && (
-          <Box
-            p="md"
-            style={{ backgroundColor: "#FFF5F0", borderRadius: "8px" }}
-          >
+          <Box p="md" className={classes.eventInfoBox}>
             <Stack gap="xs">
               <Text fw={600} size="md">
                 {eventType.name}

@@ -14,6 +14,7 @@ import type {
   EventTypeCreate,
   EventTypeUpdate,
 } from "@/shared/api/types";
+import { eventTypeValidation, type EventTypeFormValues } from "./validation";
 
 interface EventTypeModalProps {
   opened: boolean;
@@ -21,12 +22,6 @@ interface EventTypeModalProps {
   eventType?: EventType | null;
   onSubmit: (data: EventTypeCreate | EventTypeUpdate) => void;
   isSubmitting?: boolean;
-}
-
-interface EventTypeFormValues {
-  name: string;
-  description: string;
-  duration: number;
 }
 
 const DEFAULT_VALUES: EventTypeFormValues = {
@@ -47,23 +42,7 @@ export const EventTypeModal = ({
   const form = useForm<EventTypeFormValues>({
     mode: "uncontrolled",
     initialValues: DEFAULT_VALUES,
-    validate: {
-      name: (value) => {
-        if (value.trim().length === 0) return "Название обязательно";
-        if (value.length > 100) return "Максимум 100 символов";
-        return null;
-      },
-      description: (value) => {
-        if (value.trim().length === 0) return "Описание обязательно";
-        if (value.length > 500) return "Максимум 500 символов";
-        return null;
-      },
-      duration: (value) => {
-        if (!value || value < 5) return "Минимум 5 минут";
-        if (value > 480) return "Максимум 480 минут";
-        return null;
-      },
-    },
+    validate: eventTypeValidation,
   });
 
   useEffect(() => {

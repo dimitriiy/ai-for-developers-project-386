@@ -1,15 +1,11 @@
 import { Container, Grid, Stack, Title, Text, Button, Badge, Paper, List } from '@mantine/core';
 import { IconArrowRight } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import classes from './HomePage.module.css';
 
 export const HomePage = () => {
   return (
-    <div
-      style={{
-        background: 'linear-gradient(135deg, #EBF0FF 0%, #F8F9FA 50%, #FFF5F0 100%)',
-        minHeight: 'calc(100vh - 60px)',
-      }}
-    >
+    <div className={classes.heroSection}>
       <Container size="lg" py={80}>
         <Grid gap={60} align="center">
           <Grid.Col span={{ base: 12, md: 6 }}>
@@ -19,7 +15,7 @@ export const HomePage = () => {
                 color="dark"
                 size="lg"
                 radius="sm"
-                style={{ alignSelf: 'flex-start' }}
+                className={classes.alignSelfStart}
               >
                 БЫСТРАЯ ЗАПИСЬ НА ЗВОНОК
               </Badge>
@@ -38,7 +34,7 @@ export const HomePage = () => {
                 size="lg"
                 radius="xl"
                 rightSection={<IconArrowRight size={18} />}
-                style={{ alignSelf: 'flex-start' }}
+                className={classes.alignSelfStart}
               >
                 Записаться
               </Button>
@@ -51,7 +47,7 @@ export const HomePage = () => {
               p="xl"
               radius="lg"
               shadow="sm"
-              style={{ backgroundColor: 'rgba(255,255,255,0.85)' }}
+              className={classes.glassCard}
             >
               <Stack gap="md">
                 <Title order={3}>Возможности</Title>
